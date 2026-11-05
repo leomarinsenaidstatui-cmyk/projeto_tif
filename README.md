@@ -1,61 +1,219 @@
-# projeto_tif
-AquaControll
+# SESI AquaControl
 
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Sistema desenvolvido para apoiar o controle e o acompanhamento do uso da água em ambientes cadastrados. O projeto reúne uma aplicação web, uma API e um módulo IoT baseado em ESP32.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> **Status do projeto:** a aplicação web e suas rotas de cadastro e autenticação estão em desenvolvimento. No módulo IoT, a conexão Wi-Fi e o acionamento de uma bomba por relé no GPIO 4 já foram implementados e testados. A leitura do sensor de fluxo e a integração das medições com a API ainda estão pendentes.
 
-## About Laravel
+## Objetivo
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+O AquaControl tem como objetivo contribuir para o acompanhamento do consumo de água, permitindo organizar usuários e locais e, nas próximas etapas, integrar dados coletados por sensores ao sistema.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Funcionalidades implementadas na aplicação web
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Página inicial de boas-vindas.
+- Tela de login.
+- Tela de cadastro de usuários.
+- Tela de cadastro de locais.
+- Endpoints de API para cadastro de usuários e locais.
+- Endpoint de autenticação que valida as credenciais e gera um token de acesso.
+- Endpoint para registrar mensagens de boas-vindas.
 
-## Learning Laravel
+As funcionalidades podem evoluir durante o desenvolvimento. Recursos de monitoramento de consumo não devem ser considerados concluídos enquanto a leitura do sensor e o envio das medições não estiverem integrados.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Tecnologias utilizadas
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Aplicação web e API
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- **PHP 8.3**
+- **Laravel 13**
+- **Laravel Sanctum** (dependência de autenticação por tokens)
+- **JavaScript**
+- **Vite 8**
+- **Tailwind CSS 4**
+- **HTML e CSS**, com templates Blade do Laravel
 
-## Agentic Development
+### IoT
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+- **ESP32**
+- **Arduino/C++** (firmware do microcontrolador)
+- **Wi-Fi**
+- **Módulo relé** para acionamento da bomba
+- **Bomba de água**
+- **Sensor de fluxo de água** — integração em desenvolvimento
+
+## Estrutura do projeto
+
+Principais diretórios da aplicação Laravel:
+
+| Caminho | Descrição |
+| --- | --- |
+| `app/Http/Controllers` | Controladores das páginas e operações da API |
+| `app/Models` | Modelos utilizados para representar os dados |
+| `database/migrations` | Estrutura e evolução do banco de dados |
+| `resources/views` | Páginas e componentes Blade |
+| `resources/js` | Scripts JavaScript da aplicação |
+| `resources/css` | Estilos da aplicação |
+| `routes/web.php` | Rotas das páginas web |
+| `routes/api.php` | Rotas da API |
+| `public/` | Arquivos públicos da aplicação |
+
+## Rotas disponíveis
+
+### Páginas web
+
+| Método | Rota | Finalidade |
+| --- | --- | --- |
+| GET | `/` | Página inicial |
+| GET | `/login` | Tela de login |
+| GET | `/cadastro_usuario` | Tela de cadastro de usuário |
+| GET | `/cadastro_local` | Tela de cadastro de local |
+| GET | `/local` | Acesso à tela de cadastro de local |
+
+### API
+
+As rotas abaixo são prefixadas por `/api`:
+
+| Método | Endpoint | Finalidade |
+| --- | --- | --- |
+| POST | `/api/cadastrar_usuario` | Cadastrar usuário |
+| POST | `/api/cadastrar_local` | Cadastrar local |
+| POST | `/api/login` | Autenticar usuário e gerar token |
+| POST | `/api/mensagens-boas-vindas` | Registrar mensagem de boas-vindas |
+| GET | `/api/user` | Consultar usuário autenticado (middleware Sanctum) |
+
+**Observação:** os endpoints representam as rotas atualmente declaradas no projeto. Consulte os controladores para conferir os campos obrigatórios e as regras de validação de cada operação.
+
+## Requisitos
+
+Antes de iniciar, instale:
+
+- PHP 8.3 ou superior, com as extensões exigidas pelo Laravel.
+- Composer.
+- Node.js e npm.
+- Git.
+- Um banco de dados compatível com a configuração do Laravel.
+
+O arquivo `.env.example` está configurado inicialmente para SQLite. Caso utilize MySQL com HeidiSQL, ajuste as variáveis `DB_*` no arquivo `.env` para os dados da sua conexão.
+
+## Instalação e execução
+
+1. Clone o repositório:
+
+   ```bash
+   git clone https://github.com/leomarinsenaidstatui-cmyk/projeto_tif.git
+   cd projeto_tif
+   ```
+
+2. Instale as dependências PHP:
+
+   ```bash
+   composer install
+   ```
+
+3. Crie o arquivo de ambiente:
+
+   **Windows (PowerShell):**
+   ```powershell
+   Copy-Item .env.example .env
+   ```
+
+   **Linux/macOS:**
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Gere a chave da aplicação:
+
+   ```bash
+   php artisan key:generate
+   ```
+
+5. Configure o banco de dados no arquivo `.env`.
+
+   Para usar SQLite, crie o arquivo do banco, caso ainda não exista:
+
+   ```bash
+   php -r "file_exists('database/database.sqlite') || touch('database/database.sqlite');"
+   ```
+
+   Confira se `DB_CONNECTION=sqlite` está definido no `.env`.
+
+6. Execute as migrations:
+
+   ```bash
+   php artisan migrate
+   ```
+
+7. Instale as dependências JavaScript e gere os arquivos:
+
+   ```bash
+   npm install
+   npm run build
+   ```
+
+8. Inicie o servidor de desenvolvimento:
+
+   ```bash
+   php artisan serve
+   ```
+
+9. Acesse a aplicação pelo endereço:
+
+   ```
+   http://127.0.0.1:8000
+   ```
+
+Durante o desenvolvimento front-end, pode-se executar `npm run dev` em outro terminal para iniciar o Vite.
+
+## Módulo IoT — ESP32
+
+O firmware atual do ESP32 realiza a conexão à rede Wi-Fi e disponibiliza um servidor HTTP para controlar a bomba por meio de um relé conectado ao GPIO 4.
+
+Rotas disponibilizadas pelo firmware:
+
+| Método | Rota | Finalidade |
+| --- | --- | --- |
+| POST | `/bomba/ligar` | Acionar a bomba |
+| POST | `/bomba/desligar` | Desligar a bomba |
+| GET | `/bomba/status` | Consultar o estado da bomba |
+
+As rotas acima pertencem ao servidor executado no ESP32, não às rotas Laravel listadas na seção da API.
+
+**Etapas ainda necessárias no módulo IoT:**
+
+- Integrar o sensor de fluxo de água ao ESP32.
+- Realizar a leitura e o tratamento dos pulsos do sensor.
+- Calcular e registrar o volume de água medido.
+- Enviar as medições para a API do AquaControl.
+- Validar a comunicação entre o dispositivo e a aplicação.
+
+## Documentação
+
+Os documentos técnicos do projeto devem ser organizados e atualizados conforme a evolução do sistema:
+
+- Modelagem conceitual do banco de dados.
+- Modelagem lógica do banco de dados.
+- Modelagem física do banco de dados.
+- Documentação da API.
+- Documentação do módulo IoT (em documento separado).
+- README da aplicação web.
+- README da aplicação mobile.
+- Documentação geral do repositório.
+
+## Testes
+
+Para executar os testes automatizados disponíveis no projeto:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+php artisan test
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Equipe
 
-## Contributing
+Projeto acadêmico desenvolvido no contexto do curso técnico do SESI.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+> Preencha esta seção com os nomes dos integrantes, turma e orientação, conforme os dados oficiais do grupo.
 
-## Code of Conduct
+## Licença
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Este projeto está em desenvolvimento para fins educacionais. Não foi definida uma licença específica para o AquaControl.
